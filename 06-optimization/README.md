@@ -45,11 +45,11 @@ $$
 
 自回归生成时，已计算的 Key 和 Value 可缓存复用：
 
-**无 KV Cache**：每个 token 需 $O(n \cdot d)$（重复计算）
+**无 KV Cache**：每个 token 需 $O(n \cdot d)$ （重复计算）
 
 **有 KV Cache**：
 - Prefill： $O(n \cdot d)$
-- Decode： $O(1 \cdot d)$（复用）
+- Decode： $O(1 \cdot d)$ （复用）
 
 ### 2.2 KV Cache 显存占用
 

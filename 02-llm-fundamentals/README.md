@@ -193,7 +193,7 @@ $$
 
 RoPE 将绝对位置编码为旋转矩阵：
 
-对于位置 $m$ 的 query $\mathbf{q}_m$：
+对于位置 $m$ 的 query $\mathbf{q}_m$ ：
 $$
 \mathbf{q}_m = \mathbf{R}_m \mathbf{W}_q \mathbf{x}_m
 $$
