@@ -465,3 +465,173 @@ rank 选择需要权衡：
 | 128+ | 接近全量 | 较高 | 任务迁移 |
 
 **建议**：从 rank=8 或 16 开始，根据效果调整。
+
+
+---
+
+## 📝 面试高频题 & 参考答案
+
+### Q1: LLM 训练分为哪几个阶段？各阶段的作用是什么？
+
+**参考答案：**
+
+| 阶段 | 目标 | 典型数据量 |
+|------|------|-----------|
+| **预训练（Pre-training）** | 学习通用语言能力和世界知识 | TB ~ PB 级别 |
+| **有监督微调（SFT）** | 学习任务格式和指令遵循 | 万 ~ 百万级别 |
+| **奖励建模（Reward Modeling）** | 学习人类偏好 / 评分能力 | 十万条级别 |
+| **强化学习微调（RLHF）** | 对齐人类偏好 | 同 RM 数据 |
+
+---
+
+### Q2: RLHF 的全流程是什么？每一步的目标是什么？
+
+**参考答案：**
+
+```
+预训练模型
+    ↓ SFT
+有监督微调模型（SFT Model）
+    ↓ 训练 Reward Model
+Reward Model（RM）—— 学习人类偏好
+    ↓ PPO 强化学习
+对齐后的最终模型
+```
+
+1. **SFT**：让模型学习"什么样的回答是好的"，建立基础的任务能力
+2. **RM 训练**：给定 prompt + response，输出标量分数。训练数据是 human annotation 的偏好排序
+3. **PPO 微调**：使用 RM 作为奖励信号，通过策略梯度（PPO）微调 SFT 模型，使其生成更高奖励的输出，同时用 KL 散度约束不要偏离 SFT 太远
+
+---
+
+### Q3: 写出 RLHF 的 PPO 目标函数，并解释每项的含义
+
+**参考答案：**
+
+$$
+L_{	ext{PPO}} = \mathbb{E}_{(x,y)\sim\pi_{	heta_{	ext{old}}}}\left[ \min\left( r(	heta) \hat{A}, 	ext{clip}(r(	heta), 1-\epsilon, 1+\epsilon) \hat{A} 
+ight) 
+ight]
+$$
+
+其中：
+- $r(	heta) = rac{\pi_	heta(y|x)}{\pi_{	heta_{	ext{old}}}(y|x)}$ 是新旧策略的概率比
+- $\hat{A}$ 是优势函数（advantage），由 GAE 估计
+- $\epsilon$ 是 clip 范围（通常 0.1~0.2），防止 $r(	heta)$ 更新过大
+- KL 散度约束（ $eta \cdot 	ext{KL}[\pi_	heta || \pi_{	ext{ref}}]$）在完整公式中限制策略偏离参考模型
+
+---
+
+### Q4: 为什么需要 Reward Model？它和 SFT 模型有何区别？
+
+**参考答案：**
+
+- **SFT 模型**：学习"什么是好的回答"，但标注数据有限，只能覆盖有限场景
+- **RM 模型**：将"回答质量"量化为一个标量分数，可以在任意 prompt-response 上打分，从而引导 RL 探索更优的回答
+
+**RM 训练 loss（对比损失）：**
+
+$$
+L_{	ext{RM}} = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}}\left[ \log \sigma\left( r_\phi(x, y_w) - r_\phi(x, y_l) 
+ight) 
+ight]
+$$
+
+其中 $y_w$ 是人类偏好的回答， $y_l$ 是不偏好的回答，目标是让 $r_\phi(y_w) > r_\phi(y_l)$。
+
+---
+
+### Q5: PPO 中为什么要做 Clip？衰减因子 $\epsilon$ 的大小有何影响？
+
+**参考答案：**
+
+- **不 Clip**： $r(	heta)$ 可以变得很大或很小，策略更新幅度过大，训练不稳定（collapse）
+- **Clip 后**：当 $r(	heta)$ 超出 $[1-\epsilon, 1+\epsilon]$ 区间时，梯度被裁断，策略不再被鼓励继续朝该方向更新
+- **$\epsilon$ 大**：策略更新保守，训练慢但稳定
+- **$\epsilon$ 小**：策略更新激进，可能探索更快，但容易 collapse
+
+---
+
+### Q6: DPO（Direct Preference Optimization）相比 RLHF 有何优势？
+
+**参考答案：**
+
+| 维度 | RLHF | DPO |
+|------|------|-----|
+| **训练流程** | 三阶段（SFT → RM → PPO） | 直接从 SFT 出发，一阶段完成 |
+| **实现复杂度** | 高（需维护 RM、ref model、PPO） | 低（标准 RLHF 损失） |
+| **显存占用** | 高（4 个模型） | 中（2 个模型） |
+| **超参数** | KL 系数 $eta$、PPO $\epsilon$ 等 | 相对更少 |
+| **偏好数据利用率** | 间接 | 直接 |
+
+**DPO 损失函数：**
+
+$$
+L_{	ext{DPO}} = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}}\left[ \log \sigma\left( eta \log rac{\pi_	heta(y_w|x)}{\pi_{	ext{ref}}(y_w|x)} - eta \log rac{\pi_	heta(y_l|x)}{\pi_{	ext{ref}}(y_l|x)} 
+ight) 
+ight]
+$$
+
+本质上是将 RM 和 PPO 的作用统一到一个二元分类损失中。
+
+---
+
+### Q7: LoRA 的原理是什么？为什么能加速微调？
+
+**参考答案：**
+
+LoRA 的核心思想：**假设权重更新 $\Delta W$ 是低秩的**，即：
+
+$$
+W' = W + \Delta W = W + BA, \quad B \in \mathbb{R}^{d 	imes r}, A \in \mathbb{R}^{r 	imes k}
+$$
+
+其中 $r \ll \min(d, k)$，训练时只优化 $A$ 和 $B$，而不更新 $W$。
+
+**为什么能加速：**
+- 训练参数量从 $2dk$ 降到 $2r(d + k)$，当 $r$ 很小时（如 8~16），参数量减少 90%+
+- 只更新低秩矩阵 $A, B$，大幅减少梯度计算和优化器状态显存占用
+- 推理时可以合并 $W' = W + BA$ 为等价权重，无需额外计算开销
+
+---
+
+### Q8: Prefix Tuning vs. LoRA vs. Adapter Tuning 的区别？
+
+**参考答案：**
+
+| 方法 | 可训练参数 | 推理开销 | 主要缺点 |
+|------|-----------|---------|---------|
+| **LoRA** | $W_A, W_B$（低秩） | 无（可融合） | 秩选择需实验 |
+| **Prefix Tuning** | 前缀 tokens embedding | 有（占序列长度） | 占用 prompt 长度，减少可用上下文 |
+| **Adapter Tuning** | Adapter 层 FFN | 有（额外forward） | 推理延迟，层数多了影响明显 |
+| **Full FT** | 所有参数 | 无 | 显存大、存储大 |
+
+---
+
+### Q9: 强化学习中 KL 散度约束的作用是什么？
+
+**参考答案：**
+
+KL 散度约束 $	ext{KL}[\pi_	heta || \pi_{	ext{ref}}]$ 的作用：
+
+1. **防止过度优化**：没有 KL 约束，模型会朝着高奖励方向过度调整，生成无意义但 RM 分数高的文本（Reward Hacking）
+2. **保持基本能力**：KL 散度惩罚过大的策略变化，确保模型不会在优化目标时丢失原有的语言能力
+3. **平衡探索与利用**：在 RLHF 中，KL 系数 $eta$ 控制"对齐强度"——$eta$ 越大，越接近原 SFT 模型； $eta$ 越小，越激进地追求 RM 奖励
+
+---
+
+### Q10: 模型为什么会"胡言乱语"（幻觉）？根源是什么？
+
+**参考答案：**
+
+根源在于三个层面：
+
+1. **训练数据层面**：数据存在噪声、错误或偏见，模型学到错误关联
+2. **模型能力层面**：知识在预训练中被压缩存储，提取时存在不确定性
+3. **优化目标层面**：NLL（Next Token Prediction）只鼓励生成"像真实文本"的序列，不区分"真实"和"虚假但像真的"
+
+**面试加分回答**：提到 RAG、CoT、RLHF 从不同维度缓解幻觉——RAG 提供真实上下文；CoT 通过显式推理链减少跳步错误；RLHF 使模型倾向于生成"可验证为真的"内容。
+
+---
+
+> 📚 **参考来源**：[CSDN - 大模型面试遇到RLHF说明已成功一半](https://blog.csdn.net/2401_85327249/article/details/146503969)、[CSDN - AI大模型面试系列——微调专题](https://blog.csdn.net/m0_48891301/article/details/145322596)、[牛客网 - 字节大模型二面面经](https://www.nowcoder.com/discuss/601548478774304768)
