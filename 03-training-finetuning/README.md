@@ -211,7 +211,7 @@ $$
 \mathbf{W} = \mathbf{W}_0 + \Delta \mathbf{W} = \mathbf{W}_0 + \mathbf{B}\mathbf{A}
 $$
 
-其中 $\mathbf{B} \in \mathbb{R}^{d \times r}$，$\mathbf{A} \in \mathbb{R}^{r \times k}$，$r \ll \min(d, k)$。
+其中 $\mathbf{B} \in \mathbb{R}^{d \times r}$, $\mathbf{A} \in \mathbb{R}^{r \times k}$, $r \ll \min(d, k)$. 
 
 **前向传播**：
 $$
@@ -394,7 +394,7 @@ $$
 h = \mathbf{W}_0 x + \mathbf{B}\mathbf{A}x
 $$
 
-冻结 $\mathbf{W}_0$，只训练 $\mathbf{A}$ 和 $\mathbf{B}$，参数量从 $2dk$ 降到 $2r(d+k)$。
+冻结 $\mathbf{W}_0$, 只训练 $\mathbf{A}$ 和 $\mathbf{B}$, 参数量从 $2dk$ 降到 $2r(d+k)$. 
 
 ---
 

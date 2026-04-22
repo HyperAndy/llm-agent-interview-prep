@@ -224,7 +224,7 @@ INT4 显存节省更多，但精度损失更大。
 
 **参考答案**：
 
-Flash Attention 通过**分块计算**避免物化完整注意力矩阵。标准 Attention 需要 $O(n^2)$ 显存，Flash Attention 只需 $O(n)$。核心是「Tiling」+「Online Softmax」算法。
+Flash Attention 通过**分块计算**避免物化完整注意力矩阵。标准 Attention 需要 $O(n^2)$ 显存，Flash Attention 只需 $O(n)$. 核心是「Tiling」+「Online Softmax」算法。
 
 ---
 

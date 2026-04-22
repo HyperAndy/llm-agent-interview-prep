@@ -34,7 +34,7 @@ $$
 y = \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} \cdot \gamma + \beta
 $$
 
-其中 $\mu = \frac{1}{H}\sum_{i=1}^{H} x_i$，$\sigma^2 = \frac{1}{H}\sum_{i=1}^{H}(x_i - \mu)^2$
+其中 $\mu = \frac{1}{H}\sum_{i=1}^{H} x_i$, $\sigma^2 = \frac{1}{H}\sum_{i=1}^{H}(x_i - \mu)^2$
 
 **3. Positional Encoding (Sinusoidal)**
 

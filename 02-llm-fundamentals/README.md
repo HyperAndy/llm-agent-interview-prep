@@ -202,7 +202,7 @@ $$
 
 **2. Linearized Attention**
 
-将 $\exp(QK^T)$ 线性化，使复杂度降为 $O(n)$。
+将 $\exp(QK^T)$ 线性化，使复杂度降为 $O(n)$. 
 
 **3. Long Context Calibration**
 
@@ -239,7 +239,7 @@ $$
 P(y \mid x, \text{demos}) = P(y \mid x, \{(x_i, y_i)\}_{i=1}^{k})
 $$
 
-其中 demos 是 $k$ 个示例 $(x_i, y_i)$。
+其中 demos 是 $k$ 个示例 $(x_i, y_i)$. 
 
 **关键发现**：ICM 能力随模型规模涌现（~100B 参数），小模型不具备。
 
