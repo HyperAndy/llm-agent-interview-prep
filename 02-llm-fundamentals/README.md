@@ -198,7 +198,7 @@ $$
 \mathbf{q}_m = \mathbf{R}_m \mathbf{W}_q \mathbf{x}_m
 $$
 
-其中 $\mathbf{R}_m = \begin{pmatrix} \cos(m\theta) & -\sin(m\theta) \\ \sin(m\theta) & \cos(m\theta) \end{pmatrix}$
+其中 $\mathbf{R}_m = \begin{pmatrix} \cos(m\theta) & -\sin(m\theta) \ \sin(m\theta) & \cos(m\theta) \end{pmatrix}$
 
 **2. Linearized Attention**
 
