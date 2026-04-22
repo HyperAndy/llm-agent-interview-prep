@@ -41,7 +41,7 @@ $$
 - $E_i$ 是第 $i$ 个 Expert（通常是 FFN）
 - $G(x)_i$ 是路由权重
 
-**稀疏激活**：$G(x)$ 只有 Top-K 个非零值
+**稀疏激活**： $G(x)$ 只有 Top-K 个非零值
 
 ### 2.2 Router (Gating Network)
 
@@ -50,7 +50,7 @@ G(x) = \text{Softmax}(\text{TopK}(W_g x))
 $$
 
 **公式分解**：
-1. 线性变换：$z = W_g x \in \mathbb{R}^E$
+1. 线性变换： $z = W_g x \in \mathbb{R}^E$
 2. TopK 选择：保留最大的 $K$ 个值，其他置为 $-\infty$
 3. Softmax 归一化
 
@@ -84,7 +84,7 @@ $$
 G(x)_i = \text{Softmax}(\text{TopK}(W_g x + b_i))
 $$
 
-动态调整偏置项：$b_i \leftarrow b_i - \lambda \cdot (f_i - \text{target})$
+动态调整偏置项： $b_i \leftarrow b_i - \lambda \cdot (f_i - \text{target})$
 
 ---
 

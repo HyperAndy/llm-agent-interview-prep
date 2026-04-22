@@ -112,7 +112,7 @@ $$
 
 ### 3.2 Reward Model 训练
 
-从人类偏好数据 $\mathcal{D} = \{(x, y_w, y_l)\}$ 中学习，其中 $y_w \succ y_l$（$y_w$ 优于 $y_l$）。
+从人类偏好数据 $\mathcal{D} = \{(x, y_w, y_l)\}$ 中学习，其中 $y_w \succ y_l$（ $y_w$ 优于 $y_l$）。
 
 **Bradley-Terry 模型**：
 $$
@@ -220,9 +220,9 @@ $$
 
 ### 5.3 参数量分析
 
-原始全量微调：$2 \times d \times k$ 参数（需更新 $\mathbf{W}_0$）
+原始全量微调： $2 \times d \times k$ 参数（需更新 $\mathbf{W}_0$）
 
-LoRA 微调：$2 \times r \times (d + k)$ 参数
+LoRA 微调： $2 \times r \times (d + k)$ 参数
 
 **参数量 reduction**：
 $$
@@ -402,7 +402,7 @@ $$
 
 **参考答案**：
 
-粗略估算：$n$ B 参数的模型需要 $16-20 \times n$ GB 显存。
+粗略估算： $n$ B 参数的模型需要 $16-20 \times n$ GB 显存。
 
 **详细计算（以 7B 模型为例）**：
 
