@@ -15,6 +15,10 @@
 | [05-rag](./05-rag/) | RAG 检索增强生成 | ⭐⭐⭐⭐⭐ |
 | [06-optimization](./06-optimization/) | 推理优化、量化、并行 | ⭐⭐⭐⭐ |
 | [07-moe](./07-moe/) | MoE 混合专家架构 | ⭐⭐⭐ |
+| [08-prompt-engineering](./08-prompt-engineering/) | Prompt 工程核心技巧 | ⭐⭐⭐⭐ |
+| [09-context-engineering](./09-context-engineering/) | 上下文管理、RAG、长上下文 | ⭐⭐⭐⭐ |
+| [10-evaluation-harness](./10-evaluation-harness/) | 评测框架、Benchmark 构建 | ⭐⭐⭐ |
+| [11-skill-tool-use](./11-skill-tool-use/) | 工具调用、Function Calling | ⭐⭐⭐⭐ |
 
 ---
 
