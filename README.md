@@ -1,6 +1,6 @@
 # 大模型 & Agent 面试准备资料库
 
-> 本仓库系统整理了大模型（LLM）和 AI Agent 岗位面试的核心知识点，涵盖 Transformer 架构、Attention 机制、训练微调、Agent 开发、RAG、推理优化等模块。每个模块均包含数学公式推导、面试高频问题及参考答案。
+> 本仓库系统整理了大模型（LLM）和 AI Agent 岗位面试的核心知识点，涵盖 Transformer 架构、Attention 机制、训练微调、Agent 开发、RAG、推理优化、MoE 等模块。每个模块均包含数学公式推导、面试高频问题及参考答案。
 
 ---
 
@@ -19,6 +19,7 @@
 | [09-context-engineering](./09-context-engineering/) | 上下文管理、RAG、长上下文 | ⭐⭐⭐⭐ |
 | [10-evaluation-harness](./10-evaluation-harness/) | 评测框架、Benchmark 构建 | ⭐⭐⭐ |
 | [11-skill-tool-use](./11-skill-tool-use/) | 工具调用、Function Calling | ⭐⭐⭐⭐ |
+| [12-deepseekV4-analysis](./12-deepseekV4-analysis/) | DeepSeek-V4 技术报告深度解读 | ⭐⭐⭐⭐⭐ |
 
 ---
 
@@ -66,10 +67,11 @@ $$
 
 ## 📖 使用说明
 
-1. **按模块学习**：建议从 01-05 顺序学习，最后看 06-07
+1. **按模块学习**：建议从 01-05 顺序学习，最后看 06-12
 2. **理解公式**：每个模块都附有详细的数学推导和物理意义
 3. **准备面试**：每个模块附有高频面试题，可用于自测
 4. **项目落地**：部分模块包含代码示例和工程实践
+5. **最新技术**：12 模块收录了 DeepSeek-V4 技术报告完整解读，包含百万 token 上下文、混合注意力、CSA/HCA、mHC 等前沿架构解析
 
 ---
 
@@ -79,4 +81,4 @@ $$
 
 ---
 
-*Last updated: 2026-04-22*
+*Last updated: 2026-04-25*
