@@ -1,4 +1,4 @@
-下面是我按**官方 DeepSeek-V4 技术报告《DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence》**整理的详细解读。先说明一下：我这里看的版本是 Hugging Face `deepseek-ai/DeepSeek-V4-Pro` 仓库里的 PDF 技术报告；报告把 V4 称为 **preview version**，包含 **DeepSeek-V4-Pro** 和 **DeepSeek-V4-Flash** 两个 MoE 语言模型。报告摘要明确写到：V4-Pro 为 **1.6T 总参数、49B 激活参数**，V4-Flash 为 **284B 总参数、13B 激活参数**，二者都支持 **100 万 token 上下文**；在 1M token 场景下，V4-Pro 相比 DeepSeek-V3.2 只需要 **27% 单 token 推理 FLOPs** 和 **10% KV cache**。
+**官方 DeepSeek-V4 技术报告《DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence》**的详细解读。
 
 ---
 
