@@ -55,11 +55,11 @@ flowchart TD
     B --> C[Transformer Block x L]
 
     subgraph Block[One Transformer Block]
-        X[X_l\nExpanded Residual Stream]
-        X --> Apre[A_l X_l\nmHC Pre-Block Mixing]
-        Apre --> Attn[CSA or HCA\nHybrid Attention]
-        Attn --> Apost[C_l F_l(A_l X_l)\nmHC Post-Block Mixing]
-        X --> Bres[B_l X_l\nmHC Residual Mixing]
+        X[X_l | Expanded Residual Stream]
+        X --> Apre[A_l X_l | mHC Pre-Block Mixing]
+        Apre --> Attn[CSA or HCA | Hybrid Attention]
+        Attn --> Apost[C_l F_l(A_l X_l) | mHC Post-Block Mixing]
+        X --> Bres[B_l X_l | mHC Residual Mixing]
         Apost --> Sum1[Add / Mix]
         Bres --> Sum1
 
@@ -105,21 +105,21 @@ CSA 的核心是：
 
 ```mermaid
 flowchart LR
-    H[H] --> KV[C^a, C^b\nKV streams]
-    H --> Z[Z^a, Z^b\nCompression weights]
-    KV --> Comp[Token-level Compressor\nm tokens to 1 KV]
+    H[H] --> KV[C^a, C^b | KV streams]
+    H --> Z[Z^a, Z^b | Compression weights]
+    KV --> Comp[Token-level Compressor | m tokens to 1 KV]
     Z --> Comp
-    Comp --> Ccomp[C^Comp\nCompressed KV]
+    Comp --> Ccomp[C^Comp | Compressed KV]
 
-    H --> IQ[q_t^I\nIndexer Query]
-    Ccomp --> IK[K^IComp\nIndexer Keys]
-    IQ --> Score[I_{t,s}\nLightning Indexer]
+    H --> IQ[q_t^I | Indexer Query]
+    Ccomp --> IK[K^IComp | Indexer Keys]
+    IQ --> Score[I_{t,s} | Lightning Indexer]
     IK --> Score
     Score --> TopK[Top-k Selector]
     Ccomp --> TopK
 
     TopK --> SparseKV[Selected Compressed KV]
-    H --> SW[n_win tokens\nSliding Window KV]
+    H --> SW[n_win tokens | Sliding Window KV]
     SparseKV --> Cat[Concatenate]
     SW --> Cat
     Cat --> MQA[Shared KV MQA]
@@ -218,14 +218,14 @@ HCA 的逻辑比 CSA 更极端：
 flowchart LR
     H[H] --> KV[C = H W_KV]
     H --> Z[Z = H W_Z]
-    KV --> Comp[Heavy Compressor\nm tokens to 1 KV]
+    KV --> Comp[Heavy Compressor | m tokens to 1 KV]
     Z --> Comp
-    Comp --> Ccomp[C^Comp\nHeavily Compressed KV]
+    Comp --> Ccomp[C^Comp | Heavily Compressed KV]
 
     H --> Q[Low-rank Query Projection]
-    Ccomp --> MQA[Dense MQA over\ncompressed KV]
+    Ccomp --> MQA[Dense MQA over | compressed KV]
     Q --> MQA
-    H --> SW[n_win tokens\nSliding Window KV]
+    H --> SW[n_win tokens | Sliding Window KV]
     SW --> MQA
     MQA --> Out[Attention Output]
 ```
