@@ -123,27 +123,27 @@ flowchart LR
 
     H --> IQ
     Ccomp --> IK
-    IQ --> Score
-    IK --> Score
-    Score --> TopK
-    Ccomp --> TopK
+    IQ --> Sc
+    IK --> Sc
+    Sc --> TK
+    Ccomp --> TK
 
-    TopK --> SparseKV
+    TK --> SKV
     H --> SW
-    SparseKV --> Cat
+    SKV --> Cat
     SW --> Cat
     Cat --> MQA
     MQA --> Out
 
     KV[C^a C^b KV streams]
     Z[Z^a Z^b Compression weights]
-    Comp[Token-level Compressor m to 1 KV]
+    Comp[Token-level Compressor m to 1]
     Ccomp[C^Comp Compressed KV]
-    IQ[q_t^I Indexer Query]
-    IK[K^IComp Indexer Keys]
-    Score[I_{t,s} Lightning Indexer]
-    TopK[Top-k Selector]
-    SparseKV[Selected Compressed KV]
+    IQ[q Indexer Query]
+    IK[K Indexer Keys]
+    Sc[Score Lightning Indexer]
+    TK[TopK Selector]
+    SKV[Selected Compressed KV]
     SW[n_win tokens Sliding Window]
     Cat[Concatenate]
     MQA[Shared KV MQA]
