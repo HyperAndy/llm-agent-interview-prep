@@ -55,19 +55,18 @@ flowchart TD
     B --> C[Transformer Block x L]
 
     subgraph Block[One Transformer Block]
-        X[X_l | Expanded Residual Stream]
-        X --> Apre[A_l X_l | mHC Pre-Block Mixing]
-        Apre --> Attn[CSA or HCA | Hybrid Attention]
-        Attn --> Apost[C_l F_l(A_l X_l) | mHC Post-Block Mixing]
-        X --> Bres[B_l X_l | mHC Residual Mixing]
-        Apost --> Sum1[Add / Mix]
+        X --> Apre
+        Apre --> Attn
+        Attn --> Apost
+        X --> Bres
+        Apost --> Sum1
         Bres --> Sum1
 
-        Sum1 --> Mpre[mHC Pre-Block Mixing]
-        Mpre --> MoE[DeepSeekMoE FFN]
-        MoE --> Mpost[mHC Post-Block Mixing]
-        Sum1 --> Mres[mHC Residual Mixing]
-        Mpost --> Sum2[Add / Mix]
+        Sum1 --> Mpre
+        Mpre --> MoE
+        MoE --> Mpost
+        Sum1 --> Mres
+        Mpost --> Sum2
         Mres --> Sum2
     end
 
@@ -75,6 +74,17 @@ flowchart TD
     C --> E[MTP Modules]
     D --> F[LM Loss]
     E --> G[MTP Loss]
+
+    X[X_l Expanded Residual]
+    Apre[A_l X_l mHC Pre-Block]
+    Attn[CSA or HCA Hybrid Attn]
+    Apost[C_l F_l mHC Post-Block]
+    Bres[B_l X_l mHC Residual]
+    Sum1[Add / Mix]
+    Mpre[mHC Pre-Block Mixing]
+    Mpost[mHC Post-Block Mixing]
+    Mres[mHC Residual Mixing]
+    Sum2[Add / Mix]
 ```
 
 ---
@@ -105,25 +115,39 @@ CSA 的核心是：
 
 ```mermaid
 flowchart LR
-    H[H] --> KV[C^a, C^b | KV streams]
-    H --> Z[Z^a, Z^b | Compression weights]
-    KV --> Comp[Token-level Compressor | m tokens to 1 KV]
+    H --> KV
+    H --> Z
+    KV --> Comp
     Z --> Comp
-    Comp --> Ccomp[C^Comp | Compressed KV]
+    Comp --> Ccomp
 
-    H --> IQ[q_t^I | Indexer Query]
-    Ccomp --> IK[K^IComp | Indexer Keys]
-    IQ --> Score[I_{t,s} | Lightning Indexer]
+    H --> IQ
+    Ccomp --> IK
+    IQ --> Score
     IK --> Score
-    Score --> TopK[Top-k Selector]
+    Score --> TopK
     Ccomp --> TopK
 
-    TopK --> SparseKV[Selected Compressed KV]
-    H --> SW[n_win tokens | Sliding Window KV]
-    SparseKV --> Cat[Concatenate]
+    TopK --> SparseKV
+    H --> SW
+    SparseKV --> Cat
     SW --> Cat
-    Cat --> MQA[Shared KV MQA]
-    MQA --> Out[Attention Output]
+    Cat --> MQA
+    MQA --> Out
+
+    KV[C^a C^b KV streams]
+    Z[Z^a Z^b Compression weights]
+    Comp[Token-level Compressor m to 1 KV]
+    Ccomp[C^Comp Compressed KV]
+    IQ[q_t^I Indexer Query]
+    IK[K^IComp Indexer Keys]
+    Score[I_{t,s} Lightning Indexer]
+    TopK[Top-k Selector]
+    SparseKV[Selected Compressed KV]
+    SW[n_win tokens Sliding Window]
+    Cat[Concatenate]
+    MQA[Shared KV MQA]
+    Out[Attention Output]
 ```
 
 ---
@@ -216,18 +240,27 @@ HCA 的逻辑比 CSA 更极端：
 
 ```mermaid
 flowchart LR
-    H[H] --> KV[C = H W_KV]
-    H --> Z[Z = H W_Z]
-    KV --> Comp[Heavy Compressor | m tokens to 1 KV]
+    H --> KV
+    H --> Z
+    KV --> Comp
     Z --> Comp
-    Comp --> Ccomp[C^Comp | Heavily Compressed KV]
+    Comp --> Ccomp
 
-    H --> Q[Low-rank Query Projection]
-    Ccomp --> MQA[Dense MQA over | compressed KV]
+    H --> Q
+    Ccomp --> MQA
     Q --> MQA
-    H --> SW[n_win tokens | Sliding Window KV]
+    H --> SW
     SW --> MQA
-    MQA --> Out[Attention Output]
+    MQA --> Out
+
+    KV[C = H W_KV]
+    Z[Z = H W_Z]
+    Comp[Heavy Compressor m to 1 KV]
+    Ccomp[C^Comp Heavily Compressed]
+    Q[Low-rank Query Projection]
+    MQA[Dense MQA over compressed KV]
+    SW[n_win tokens Sliding Window]
+    Out[Attention Output]
 ```
 
 ---
